@@ -34,15 +34,17 @@ namespace Server
                 string userName = sR.ReadLine();
                 Console.WriteLine("{0} connected!!, Id:{1}", userName, count);
                 lock (_lock) UserList.Add(count, userName);
-
-                Thread clientHandler = new Thread(Handle_clients);
+                string newClient = userName + " Join The App!, User Id:" + count;
+                Broadcast(newClient, count);
+                Thread clientHandler = new Thread(HandleClients);
+                
                 clientHandler.Start(count);
                 count++;
             }
         }
-        public void Handle_clients(object o)
+        public void HandleClients(object o)
         {
-            int id = (int)o;
+            int id =(int) o;
             TcpClient client;
 
             lock (_lock) client = ClientList[id];
@@ -63,10 +65,14 @@ namespace Server
 
             lock (_lock) ClientList.Remove(id);
             Console.WriteLine("{0} disconnected!", UserList[id]);
+            string disconnectedClient = UserList[id] + " disconnected :(";
+            Broadcast(disconnectedClient, id);
             lock (_lock) UserList.Remove(id);
             client.Client.Shutdown(SocketShutdown.Both);
             client.Close();
         }
+
+
         public void Broadcast(string data, int idSender)
         {
             byte[] buffer = Encoding.ASCII.GetBytes(data + Environment.NewLine);

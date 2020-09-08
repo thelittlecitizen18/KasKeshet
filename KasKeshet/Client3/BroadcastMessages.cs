@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Client1
 {
-    class SendMessages
+    class BroadcastMessages
     {
         public void SendMsg(string userName, TcpClient client)
         {
@@ -51,13 +51,13 @@ namespace Client1
             }
         }
 
-        public int MainMenu()
-        {
-            Console.WriteLine("Hi {0}, Welcome To KasKeshet" +
-                "\n 1 - for Send A Global Messages For All The Clients Registered" +
-                "\n 2- for Send A Private Massage For Registered Client");
-            int choice = Convert.ToInt32(Console.ReadLine());
-            return choice;
-        }
+        //public int MainMenu()
+        //{
+        //    Console.WriteLine("Hi {0}, Welcome To KasKeshet" +
+        //        "\n 1 - for Send A Global Messages For All The Clients Registered" +
+        //        "\n 2- for Send A Private Massage For Registered Client");
+        //    int choice = Convert.ToInt32(Console.ReadLine());
+        //    return choice;
+        //}
     }
 }

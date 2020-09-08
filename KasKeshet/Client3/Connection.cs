@@ -29,10 +29,5 @@ namespace Client1
             Console.WriteLine("{0} connected!!", userName);
             return userName;
         }
-
-        //IPAddress ip = IPAddress.Parse("127.0.0.1");
-        //int port = 11000;
-        //TcpClient client = new TcpClient();
-        //client.Connect(ip, port);
     }
 }
