@@ -8,17 +8,9 @@ using System.IO;
 
 namespace Client1
 {
-    class Program
+    class SendMessages
     {
-        static void Main(string[] args)
-        {
-            Connection connect = new Connection();
-            var client = connect.MakeAConnection();
-            var userName = connect.RegistrationToServer(client);
-            SendMsg(userName, client);
-        }
-
-        public static void SendMsg(string userName, TcpClient client)
+        public void SendMsg(string userName, TcpClient client)
         {
             Thread thread = new Thread(startThread => ReceiveData((TcpClient)startThread));
             thread.Start(client);
@@ -35,7 +27,7 @@ namespace Client1
                 string sendMsg = userName + ":" + clientRespons;
                 byte[] buffer = Encoding.ASCII.GetBytes(sendMsg);
                 ns.Write(buffer, 0, buffer.Length);
-                
+
             }
 
             client.Client.Shutdown(SocketShutdown.Send);
@@ -47,7 +39,7 @@ namespace Client1
 
         }
 
-        static void ReceiveData(TcpClient client)
+        public void ReceiveData(TcpClient client)
         {
             NetworkStream ns = client.GetStream();
             byte[] receivedBytes = new byte[1024];
@@ -59,7 +51,7 @@ namespace Client1
             }
         }
 
-        public static int MainMenu()
+        public int MainMenu()
         {
             Console.WriteLine("Hi {0}, Welcome To KasKeshet" +
                 "\n 1 - for Send A Global Messages For All The Clients Registered" +
@@ -69,4 +61,3 @@ namespace Client1
         }
     }
 }
-
