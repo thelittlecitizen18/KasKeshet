@@ -13,6 +13,7 @@ namespace Client2
     {
         static void Main(string[] args)
         {
+            
             IPAddress ip = IPAddress.Parse("127.0.0.1");
             int port = 11000;
             TcpClient client = new TcpClient();
@@ -58,6 +59,7 @@ namespace Client2
             }
           
         }
+        
 
     }
 

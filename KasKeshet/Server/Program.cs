@@ -14,12 +14,9 @@ namespace Server
         static readonly object _lock = new object();
         static readonly Dictionary<int, TcpClient> list_clients = new Dictionary<int, TcpClient>();
         static readonly Dictionary<int, string> list_userNames = new Dictionary<int, string>();
-        
-
         static void Main(string[] args)
         {
             int count = 1;
-            
 
             TcpListener ServerSocket = new TcpListener(IPAddress.Any, 11000);
             ServerSocket.Start();
@@ -40,8 +37,6 @@ namespace Server
             }
         }
 
-
-
         public static void Handle_clients(object o)
         {
             int id = (int)o;
@@ -58,7 +53,6 @@ namespace Server
                 {
                     break;
                 }
-
                 string data = Encoding.ASCII.GetString(buffer, 0, byte_count);
                 Broadcast(data, id);
                 Console.WriteLine(data);
@@ -71,6 +65,7 @@ namespace Server
             client.Close();
         }
 
+       
 
         public static void Broadcast(string data, int idSender)
         {
@@ -88,6 +83,12 @@ namespace Server
                     }
                 }
             }
+        }
+
+        public static void CreatePrivateChat()
+        {
+
+
         }
     }
 }
