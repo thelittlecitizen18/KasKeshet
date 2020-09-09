@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.IO;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using Client1;
 
 namespace Server
 {
@@ -21,7 +23,7 @@ namespace Server
             ClientList = clientList;
             UserList = userList;
         }
-
+        
         public void AddClientsToLists(TcpListener serverSocket)
         {
             int count = 1;
@@ -36,12 +38,25 @@ namespace Server
                 lock (_lock) UserList.Add(count, userName);
                 string newClient = userName + " Join The App!, User Id:" + count;
                 Broadcast(newClient, count);
-                Thread clientHandler = new Thread(HandleClients);
-                
-                clientHandler.Start(count);
+
+                StartConversation(count);
+
+
+                //Thread clientHandler = new Thread(HandleClients);
+                //clientHandler.Start(count);
                 count++;
+                //int idNum = count - 1; 
+                //return idNum;
+                
             }
         }
+
+        public void StartConversation(int idNum)
+        {
+            Thread clientHandler = new Thread(HandleClients);
+            clientHandler.Start(idNum);
+        }
+
         public void HandleClients(object o)
         {
             int id =(int) o;
@@ -59,8 +74,17 @@ namespace Server
                     break;
                 }
                 string data = Encoding.ASCII.GetString(buffer, 0, byte_count);
-                Broadcast(data, id);
-                Console.WriteLine(data);
+                AMessage aMessage = JsonConvert.DeserializeObject<AMessage>(data);
+                string msg = aMessage.Message;
+                int type = Convert.ToInt32(aMessage.Type);
+                
+                if (type == 1)
+                {
+                    Broadcast(msg, id);
+                }
+                Console.WriteLine(msg);
+
+                
             }
 
             lock (_lock) ClientList.Remove(id);

@@ -4,8 +4,10 @@ using System.Text;
 
 namespace Client1
 {
-    class Message
+    public enum MessageType
     {
-
+        Public,
+        Private,
+        Room
     }
 }

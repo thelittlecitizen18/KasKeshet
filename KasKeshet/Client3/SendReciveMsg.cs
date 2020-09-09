@@ -5,43 +5,39 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.IO;
-using Newtonsoft.Json;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Client1
 {
-    class PrivateChat
+    class SendReciveMsg
     {
-        public void PrivateMsg(string userName, TcpClient client)
+        public void SendMsg(AMessage SendMsg, TcpClient client)
         {
             Thread thread = new Thread(startThread => ReceiveData((TcpClient)startThread));
             thread.Start(client);
-
             NetworkStream ns = client.GetStream();
-
-            Console.WriteLine("Who Do You Send A Message? Please Enter A User Id:");
-            int userid = Convert.ToInt32(Console.ReadLine());
-            
-
 
             while (true)
             {
-                string returnMenu = "@BackToMenu";
+                string exitChat = "@ExitChat";
+                Console.WriteLine("");
                 string clientRespons = (Console.ReadLine());
-                if (string.Equals(returnMenu, clientRespons))
+                if (string.Equals(exitChat, clientRespons))
                 {
                     break;
                 }
-                //string sendMsg = userName + ":" + clientRespons;
-                //AMessage aMessage = new AMessage(userName, new List<int>()
-                //{
-                //   userid
-                //}, sendMsg);
-               
+                string sendMsg = SendMsg.Source + ":" + clientRespons;
+                AMessage aMessage = new AMessage(SendMsg.Source, new List<int>()
+                {
 
-                //string aMessageJason = JsonConvert.SerializeObject(aMessage, Formatting.Indented);
-                //byte[] buffer = Encoding.ASCII.GetBytes(aMessageJason);
-                //ns.Write(buffer, 0, buffer.Length);
+                }, sendMsg, MessageType.Private);
+ 
+                string aMessageJason = JsonConvert.SerializeObject(aMessage, Formatting.Indented);
+                byte[] buffer = Encoding.ASCII.GetBytes(aMessageJason);
+                ns.Write(buffer, 0, buffer.Length);
+                /*byte[] buffer = Encoding.ASCII.GetBytes(sendMsg);
+                ns.Write(buffer, 0, buffer.Length);*/
 
             }
 
@@ -65,5 +61,7 @@ namespace Client1
                 Console.Write(Encoding.ASCII.GetString(receivedBytes, 0, byte_count));
             }
         }
+
+      
     }
 }

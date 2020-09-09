@@ -20,8 +20,13 @@ namespace Server
             ManageClients ManageClients = new ManageClients(new Dictionary<int, TcpClient>(), new Dictionary<int, string>());
             var serverSocket = connect.MakeConnection();
 
-
             ManageClients.AddClientsToLists(serverSocket);
+
+            //while (true)
+            //{
+            //   ManageClients.StartConversation(count);
+            //}
+           
 
         }
 

@@ -5,28 +5,49 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.IO;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Client1
 {
-    class BroadcastMessages
+    class GroupChat
     {
-        public void SendMsg(string userName, TcpClient client)
+        public void PrivateMsg(string userName, TcpClient client)
         {
             Thread thread = new Thread(startThread => ReceiveData((TcpClient)startThread));
             thread.Start(client);
+
             NetworkStream ns = client.GetStream();
+
+            Console.WriteLine("Who Do You Send A Message? Please Enter Users Id (By The Format 1,2,3 ...)");
+            int userid = Convert.ToInt32(Console.ReadLine());
+            Console.Write("You:");
+
+
 
             while (true)
             {
-                string exitChat = "@ExitChat";
+                string returnMenu = "@BackToMenu";
                 string clientRespons = (Console.ReadLine());
-                if (string.Equals(exitChat, clientRespons))
+                if (string.Equals(returnMenu, clientRespons))
                 {
                     break;
                 }
                 string sendMsg = userName + ":" + clientRespons;
-                byte[] buffer = Encoding.ASCII.GetBytes(sendMsg);
-                ns.Write(buffer, 0, buffer.Length);
+
+
+
+
+
+                //AMessage aMessage = new AMessage(userName, new List<int>()
+                //{
+                //   userid
+                //}, sendMsg);
+
+
+                //string aMessageJason = JsonConvert.SerializeObject(aMessage, Formatting.Indented);
+                //byte[] buffer = Encoding.ASCII.GetBytes(sendMsg);
+                //ns.Write(buffer, 0, buffer.Length);
 
             }
 
@@ -51,13 +72,18 @@ namespace Client1
             }
         }
 
-        //public int MainMenu()
-        //{
-        //    Console.WriteLine("Hi {0}, Welcome To KasKeshet" +
-        //        "\n 1 - for Send A Global Messages For All The Clients Registered" +
-        //        "\n 2- for Send A Private Massage For Registered Client");
-        //    int choice = Convert.ToInt32(Console.ReadLine());
-        //    return choice;
-        //}
+        public void SpereatesId()
+        {
+            string userid = "1 2 3 4 6 7 8 9";
+            char[] speaator = { ' ' };
+            string[] idlist = userid.Split(speaator, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var s in idlist)
+            {
+                int a = Convert.ToInt32(s);
+                //id.Add(a);
+
+            }
+        }
     }
 }
