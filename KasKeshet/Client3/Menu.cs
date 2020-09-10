@@ -45,44 +45,38 @@ namespace Client1
                         AMessage send1 = new AMessage(userName, new List<int>() { recipientId }, message1, MessageType.Private);
                         SendRecive.SendMsg(send1, client, userName, ns);
                         break;
+                    case 3:
+                        Console.WriteLine("Enter A Message:");
+                        string message2 = Console.ReadLine();
+                        Console.WriteLine("Enter How Many Recipient's:");
+                        int numOfRecive = Convert.ToInt32(Console.ReadLine());
+                        AMessage send2 = new AMessage(userName, GetDestinationIds(numOfRecive), message2, MessageType.Room);
+                        SendRecive.SendMsg(send2, client, userName, ns);
+                        break;
 
                     default:
                         Console.WriteLine("Please Choose A Valid Number");
                         break;
+                        
 
                 }
             }
         }
 
-        //public AMessage CreateAMessage (int type,  string userName)
-        //{
-        //    if (type == 1)
-        //    {
-        //        Console.WriteLine("Enter A Message:");
-        //        string message = Console.ReadLine();
-        //        AMessage send = new AMessage(userName, new List<int>() { }, message, MessageType.Public);
-        //        return send;
-        //    }
-        //    else if (type == 2)
-        //    {
-        //        Console.WriteLine("Enter The Recipient's ID:");
-        //        int recipientId = Convert.ToInt32(Console.ReadLine());
-        //        Console.WriteLine("Enter A Message:");
-        //        string message1 = Console.ReadLine();
-        //        AMessage send1 = new AMessage(userName, new List<int>() { recipientId }, message1, MessageType.Private);
-        //        return send1;
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
+        public List<int> GetDestinationIds(int idCount)
+        {
+            List<int> ids = new List<int>();
+            for (int i = 0; i < idCount; i++)
+            {
+                Console.WriteLine("Enter The Recipient's ID:");
+                ids.Add(Convert.ToInt32(Console.ReadLine()));
+            }
+            return ids;
+        }
 
     }
 
-    //public void PrintClientList()
-    //{
-
-    //}
+    
 
 }
 

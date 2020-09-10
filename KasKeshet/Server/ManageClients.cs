@@ -76,10 +76,11 @@ namespace Server
                 {
                    Broadcast(msg, id);
                 }
-                else if (type == 1)
+                else if (type == 1 || type == 2)
                 {
-                    PrivateMsg(msg,aMessage.Destination);
+                    PrivateAndGroupMsg(msg,aMessage.Destination);
                 }
+               
                 Console.WriteLine(msg);
 
             }
@@ -111,7 +112,7 @@ namespace Server
                 }
             }
         }
-        public void PrivateMsg(string data, List<int> idRecive)
+        public void PrivateAndGroupMsg(string data, List<int> idRecive)
         {
             byte[] buffer = Encoding.ASCII.GetBytes(data + Environment.NewLine);
             
@@ -127,6 +128,11 @@ namespace Server
                     }
                 }
             }
+        }
+
+        public void GroupMsg()
+        {
+
         }
 
 
