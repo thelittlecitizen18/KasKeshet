@@ -12,37 +12,64 @@ namespace Client1
 {
     class SendReciveMsg
     {
-        public void SendMsg(AMessage SendMsg, TcpClient client)
+        public Dictionary<string, Thread> ThreadList { get; set; }
+
+        public SendReciveMsg(Dictionary<string, Thread> threadList)
         {
-            Thread thread = new Thread(startThread => ReceiveData((TcpClient)startThread));
-            thread.Start(client);
-            NetworkStream ns = client.GetStream();
+            ThreadList = threadList;
+        }
+
+        public NetworkStream RecivedMsg(TcpClient client, string userName)
+        {
+            while (true)
+            {
+                Thread thread = new Thread(startThread => ReceiveData((TcpClient)startThread));
+                thread.Start(client);
+                NetworkStream ns = client.GetStream();
+                ThreadList.Add(userName, thread);
+                Console.WriteLine("log: Thread create");
+                return ns;
+            }
+           
+            
+        }
+        //public AMessage ClientSend (AMessage msgInfo)
+        //{
+        //    Console.Write("You:");
+        //    string Console.ReadLine();
+        //    AMessage msgFull = new AMessage(msgInfo.Source, msgInfo.)
+
+
+        //}
+
+        public void SendMsg( AMessage sendMsg, TcpClient client, string userName, NetworkStream ns)
+        {
+            //Thread thread = new Thread(startThread => ReceiveData((TcpClient)startThread));
+            //thread.Start(client);
+            //NetworkStream ns = client.GetStream();
 
             while (true)
             {
                 string exitChat = "@ExitChat";
-                Console.WriteLine("");
-                string clientRespons = (Console.ReadLine());
+                string clientRespons = sendMsg.Message;
                 if (string.Equals(exitChat, clientRespons))
                 {
                     break;
                 }
-                string sendMsg = SendMsg.Source + ":" + clientRespons;
-                AMessage aMessage = new AMessage(SendMsg.Source, new List<int>()
-                {
-
-                }, sendMsg, MessageType.Private);
  
-                string aMessageJason = JsonConvert.SerializeObject(aMessage, Formatting.Indented);
+                string aMessageJason = JsonConvert.SerializeObject(sendMsg, Formatting.Indented);
                 byte[] buffer = Encoding.ASCII.GetBytes(aMessageJason);
                 ns.Write(buffer, 0, buffer.Length);
-                /*byte[] buffer = Encoding.ASCII.GetBytes(sendMsg);
-                ns.Write(buffer, 0, buffer.Length);*/
+
+                sendMsg.Message = Console.ReadLine();
+
+
+
 
             }
 
             client.Client.Shutdown(SocketShutdown.Send);
-            thread.Join();
+            ThreadList[userName].Join();
             ns.Close();
             client.Close();
             Console.WriteLine("disconnect from server!!");

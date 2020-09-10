@@ -16,6 +16,7 @@ namespace Client1
             int port = 11000;
             TcpClient client = new TcpClient();
             client.Connect(ip, port);
+            Console.WriteLine("log: connection make");
             return client;
         }
 

@@ -40,14 +40,8 @@ namespace Server
                 Broadcast(newClient, count);
 
                 StartConversation(count);
-
-
-                //Thread clientHandler = new Thread(HandleClients);
-                //clientHandler.Start(count);
                 count++;
-                //int idNum = count - 1; 
-                //return idNum;
-                
+ 
             }
         }
 
@@ -68,23 +62,26 @@ namespace Server
             {
                 NetworkStream stream = client.GetStream();
                 byte[] buffer = new byte[1024];
-                int byte_count = stream.Read(buffer, 0, buffer.Length);
+                 int byte_count = stream.Read(buffer, 0, buffer.Length);
                 if (byte_count == 0)
                 {
                     break;
                 }
                 string data = Encoding.ASCII.GetString(buffer, 0, byte_count);
                 AMessage aMessage = JsonConvert.DeserializeObject<AMessage>(data);
-                string msg = aMessage.Message;
+                string msg = UserList[id] + ":" + aMessage.Message;
                 int type = Convert.ToInt32(aMessage.Type);
                 
-                if (type == 1)
+                if (type == 0)
                 {
-                    Broadcast(msg, id);
+                   Broadcast(msg, id);
+                }
+                else if (type == 1)
+                {
+                    PrivateMsg(msg,aMessage.Destination);
                 }
                 Console.WriteLine(msg);
 
-                
             }
 
             lock (_lock) ClientList.Remove(id);
@@ -106,6 +103,23 @@ namespace Server
                 foreach (KeyValuePair<int, TcpClient> clientInBroadcast in ClientList)
                 {
                     if (clientInBroadcast.Key != idSender)
+                    {
+                        NetworkStream stream = clientInBroadcast.Value.GetStream();
+
+                        stream.Write(buffer, 0, buffer.Length);
+                    }
+                }
+            }
+        }
+        public void PrivateMsg(string data, List<int> idRecive)
+        {
+            byte[] buffer = Encoding.ASCII.GetBytes(data + Environment.NewLine);
+            
+            lock (_lock)
+            {
+                foreach (KeyValuePair<int, TcpClient> clientInBroadcast in ClientList)
+                {
+                    if (clientInBroadcast.Key.Equals(idRecive))
                     {
                         NetworkStream stream = clientInBroadcast.Value.GetStream();
 
