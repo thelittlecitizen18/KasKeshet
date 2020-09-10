@@ -18,6 +18,7 @@ namespace Client1
         {
             ThreadList = threadList;
         }
+        //public Menu Menu { get; set; }
 
         public NetworkStream RecivedMsg(TcpClient client, string userName)
         {
@@ -30,50 +31,40 @@ namespace Client1
                 Console.WriteLine("log: Thread create");
                 return ns;
             }
-           
-            
+
+
         }
-        //public AMessage ClientSend (AMessage msgInfo)
-        //{
-        //    Console.Write("You:");
-        //    string Console.ReadLine();
-        //    AMessage msgFull = new AMessage(msgInfo.Source, msgInfo.)
 
-
-        //}
-
-        public void SendMsg( AMessage sendMsg, TcpClient client, string userName, NetworkStream ns)
+        public void SendMsg(AMessage sendMsg, TcpClient client, string userName, NetworkStream ns)
         {
-            //Thread thread = new Thread(startThread => ReceiveData((TcpClient)startThread));
-            //thread.Start(client);
-            //NetworkStream ns = client.GetStream();
+            string exitchat = "@BackToMenu";
 
-            while (true)
+            while (sendMsg.Message != exitchat)
             {
-                string exitChat = "@ExitChat";
+
+                string exitServer = "@ExitServer";
                 string clientRespons = sendMsg.Message;
-                if (string.Equals(exitChat, clientRespons))
+                if (clientRespons != exitServer)
                 {
-                    break;
+                    string aMessageJason = JsonConvert.SerializeObject(sendMsg, Formatting.Indented);
+                    byte[] buffer = Encoding.ASCII.GetBytes(aMessageJason);
+                    ns.Write(buffer, 0, buffer.Length);
+
+                    sendMsg.Message = Console.ReadLine();
+
+                   
                 }
- 
-                string aMessageJason = JsonConvert.SerializeObject(sendMsg, Formatting.Indented);
-                byte[] buffer = Encoding.ASCII.GetBytes(aMessageJason);
-                ns.Write(buffer, 0, buffer.Length);
-
-                sendMsg.Message = Console.ReadLine();
-
-
-
-
+                else
+                {
+                    client.Client.Shutdown(SocketShutdown.Send);
+                    ThreadList[userName].Join();
+                    ns.Close();
+                    client.Close();
+                    Console.WriteLine("disconnect from server!!");
+                    Console.ReadKey();
+                    break;
+                }  
             }
-
-            client.Client.Shutdown(SocketShutdown.Send);
-            ThreadList[userName].Join();
-            ns.Close();
-            client.Close();
-            Console.WriteLine("disconnect from server!!");
-            Console.ReadKey();
 
         }
 
@@ -89,6 +80,6 @@ namespace Client1
             }
         }
 
-      
+
     }
 }

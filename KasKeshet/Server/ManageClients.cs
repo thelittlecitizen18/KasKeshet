@@ -119,7 +119,7 @@ namespace Server
             {
                 foreach (KeyValuePair<int, TcpClient> clientInBroadcast in ClientList)
                 {
-                    if (clientInBroadcast.Key.Equals(idRecive))
+                    if (idRecive.Contains(clientInBroadcast.Key))
                     {
                         NetworkStream stream = clientInBroadcast.Value.GetStream();
 

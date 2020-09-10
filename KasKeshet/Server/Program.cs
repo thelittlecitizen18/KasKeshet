@@ -11,10 +11,10 @@ namespace Server
 {
     class Program
     {
-        static readonly object _lock = new object();
 
         static void Main(string[] args)
         {
+            Console.WriteLine("Server");
 
             Connect connect = new Connect();
             ManageClients ManageClients = new ManageClients(new Dictionary<int, TcpClient>(), new Dictionary<int, string>());

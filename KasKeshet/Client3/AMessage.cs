@@ -4,8 +4,9 @@ using System.Text;
 
 namespace Client1
 {
+    [Serializable]
     public class AMessage
-    {
+    {  
         public string Source { get; set; }
         public List<int> Destination { get; set; }
         public string Message { get; set; }

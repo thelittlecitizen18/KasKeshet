@@ -23,8 +23,8 @@ namespace Client1
             Menu menu = new Menu();
             var task = Task.Factory.StartNew(obj =>
             {
-                var msg = menu.MainMenu(userName);
-                sendRecive.SendMsg(msg, client, userName, ns);
+                menu.MainMenu(client, userName, ns);
+                
             }, userName
             );
 
